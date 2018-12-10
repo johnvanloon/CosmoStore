@@ -4,8 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CosmoStore.fs" />
     <EmbeddedResource Include="CosmosDb\StoredProcedures\AppendEvents.js" />
+    <Compile Include="CosmoStore.fs" />
     <Compile Include="CosmosDb\CosmosDb.fs" />
     <Compile Include="CosmosDb\Serialization.fs" />
     <Compile Include="CosmosDb\Conversion.fs" />

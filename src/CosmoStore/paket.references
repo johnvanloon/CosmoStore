@@ -1,5 +1,6 @@
 FSharp.Core
 TaskBuilder.fs
 Newtonsoft.Json
+Microsoft.Azure.DocumentDB.ChangeFeedProcessor
 Microsoft.Azure.DocumentDB.Core
 WindowsAzure.Storage

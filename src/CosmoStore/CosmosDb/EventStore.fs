@@ -137,6 +137,7 @@ let private getRequestOptions usePartitionKey streamId =
     if usePartitionKey then RequestOptions(PartitionKey = PartitionKey(streamId))
     else RequestOptions()    
 
+// Test
 let getEventStore (configuration:Configuration) = 
     let client = new DocumentClient(configuration.ServiceEndpoint, configuration.AuthKey)
     let dbUri = UriFactory.CreateDatabaseUri(configuration.DatabaseName)

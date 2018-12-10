@@ -17,8 +17,8 @@ module CosmosDb =
     let private getConfig throughput = 
         let conf = 
             CosmoStore.CosmosDb.Configuration.CreateDefault 
-                (Uri "https://localhost:8081") 
-                "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw=="
+                (Uri "https://jvl-cosmos.documents.azure.com") 
+                "ufZTuHTcAtvTuOcn1SVrt4MzjGajtwQZT8oNxvnZs0nCj4hl8dkYnwEvewtcL7BKzIV4vWcVMcDaN8qgH0aZbw=="
         let c = if throughput > 10000 then { conf with Capacity = Unlimited; Throughput = throughput } else { conf with Throughput = throughput }
         let n = sprintf "EventStore_%i" throughput
         { c with DatabaseName = n }
@@ -39,22 +39,22 @@ module CosmosDb =
     let eventStoreBig = 
         bigSize |> getCleanEventStore
 
-module TableStorage =
-    open CosmoStore.TableStorage
-    open Microsoft.WindowsAzure.Storage
+// module TableStorage =
+//     open CosmoStore.TableStorage
+//     open Microsoft.WindowsAzure.Storage
 
-    let private conf = Configuration.CreateDefaultForLocalEmulator()
+//     let private conf = Configuration.CreateDefaultForLocalEmulator()
 
-    let getCleanEventStore() =
-        let account = CloudStorageAccount.DevelopmentStorageAccount
-        let client = account.CreateCloudTableClient()
-        let table = client.GetTableReference("Events")
-        try
-            table.DeleteIfExistsAsync() |> Async.AwaitTask |> Async.RunSynchronously |> ignore
-        with _ -> ()
-        conf |> EventStore.getEventStore
+//     let getCleanEventStore() =
+//         let account = CloudStorageAccount.DevelopmentStorageAccount
+//         let client = account.CreateCloudTableClient()
+//         let table = client.GetTableReference("Events")
+//         try
+//             table.DeleteIfExistsAsync() |> Async.AwaitTask |> Async.RunSynchronously |> ignore
+//         with _ -> ()
+//         conf |> EventStore.getEventStore
     
-    let eventStore = getCleanEventStore()
+//     let eventStore = getCleanEventStore()
 
 let getStreamId () = sprintf "TestStream_%A" (Guid.NewGuid())
 
@@ -85,12 +85,12 @@ type StoreType =
 let getEventStore = function
     | StoreType.CosmosSmall -> CosmosDb.eventStoreSmall
     | StoreType.CosmosBig -> CosmosDb.eventStoreBig
-    | StoreType.TableStorage -> TableStorage.eventStore   
+    | StoreType.TableStorage -> CosmosDb.eventStoreSmall
 
 let getCleanEventStore = function
     | StoreType.CosmosSmall -> CosmosDb.getCleanEventStore CosmosDb.smallSize
     | StoreType.CosmosBig -> CosmosDb.getCleanEventStore CosmosDb.bigSize
-    | StoreType.TableStorage -> TableStorage.getCleanEventStore()   
+    | StoreType.TableStorage -> CosmosDb.getCleanEventStore CosmosDb.smallSize
 
 
 [<Test>]
